@@ -1,1 +1,137 @@
-app assets
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Monster Study Dashboard</title>
+</head>
+<body>
+
+<h2>Monster v2 Study Dashboard</h2>
+
+<!-- Wikipedia Search -->
+<input id="query" placeholder="Search Wikipedia">
+<button onclick="searchWiki()">Wikipedia</button>
+<div id="wikiResult"></div>
+
+<!-- AI Questions -->
+<textarea id="aiPrompt" placeholder="Ask Monster AI"></textarea>
+<button onclick="askAI()">Ask AI</button>
+<div id="aiAnswer"></div>
+<button onclick="read()">Read Aloud</button>
+
+<!-- Highlight & Revision -->
+<button onclick="highlightSelectionOnly()">Highlight Selection</button>
+<button onclick="highlightWord()">Highlight Word</button>
+<button onclick="highlightLine()">Highlight Line</button>
+<button onclick="recap()">Recap</button>
+<button onclick="cloze()">Cloze</button>
+<button onclick="mcq()">MCQ</button>
+
+<!-- Voice commands -->
+<button onclick="listen()">Voice Cmd</button>
+<select id="langSelect">
+  <option value="en-US">English (US)</option>
+  <option value="en-GB">English (UK)</option>
+  <option value="fr-FR">French</option>
+  <option value="es-ES">Spanish</option>
+  <option value="de-DE">German</option>
+</select>
+<button onclick="downloadLang()">Download Voice</button>
+
+<!-- Video Recommendations -->
+<h3>Topic Video Recommendations</h3>
+<input type="text" id="videoTopic" placeholder="Enter Topic (e.g., Math)">
+<button onclick="playVideo()">Play Video</button>
+<button onclick="requestNewVideo()">Request New Video</button>
+<div id="videoOutput"></div>
+
+<!-- AI Tutor -->
+<h3>Interactive AI Tutor</h3>
+<textarea id="boardContent" rows="4" cols="70" placeholder="Write on Smart Board"></textarea><br>
+<input type="text" id="participantNames" placeholder='Participants JSON e.g., ["Alice","Bob"]'><br>
+<button onclick="register()">Register Participants</button>
+<button onclick="select()">Select Participant</button>
+<button onclick="updateBoard()">Update Smart Board</button>
+<button onclick="viewBoard()">View Smart Board</button>
+<button onclick="fetchInfo()">Fetch Online Info</button>
+<div id="tutorOutput"></div>
+
+<!-- Participant Interaction -->
+<h3>Participant Interaction</h3>
+<input type="text" id="participantNameInteract" placeholder="Your Name">
+<input type="text" id="silentQuestion" placeholder="Type question for silent submission"><br>
+<button onclick="raiseHand()">Raise Hand</button>
+<button onclick="listHands()">List Raised Hands</button>
+<button onclick="clearHands()">Clear Hands</button>
+<button onclick="submitQuestion()">Submit Silent Question</button>
+<button onclick="answerQuestions()">AI Answer Silent Questions</button>
+<div id="interactionOutput"></div>
+
+<!-- Study Planner -->
+<h3>Automated Study Planner</h3>
+<textarea id="courseOutline" rows="4" cols="70" placeholder='Enter topics as JSON e.g., ["Math","Physics"]'></textarea><br>
+<input type="number" id="breakMinutes" placeholder="Break Minutes"><br>
+<button onclick="uploadOutline()">Upload Outline</button>
+<button onclick="setBreak()">Set Break</button>
+<button onclick="generatePlan()">Generate Daily Plan</button>
+<input type="text" id="questionTopic" placeholder="Topic for Past Questions">
+<button onclick="fetchQuestions()">Fetch Past Questions</button>
+<div id="planOutput"></div>
+
+<!-- Interphase Breaks -->
+<h3>Interphase Breaks</h3>
+<input type="number" id="breakLength" placeholder="Break Minutes"><br>
+<button onclick="setBreakLength()">Set Break Length</button>
+<button onclick="startBreak()">Start Break</button>
+<div id="breakOutput"></div>
+
+<script>
+/* ---------------- Highlight & Read ---------------- */
+let highlightColor="yellow";
+function highlightSelection(scope="selection"){ /* word,line,selection logic */ }
+function highlightWord(){highlightSelection("word");}
+function highlightLine(){highlightSelection("line");}
+function highlightSelectionOnly(){highlightSelection("selection");}
+function read(){ const t=window.getSelection().toString()||document.body.innerText; Monster.speak(t); }
+function downloadLang(){ const lang=document.getElementById("langSelect").value; Monster.downloadVoice(lang); alert("Requested download for "+lang); }
+function recap(){alert(document.body.innerText.split('.').slice(0,5).join('.'));}
+function cloze(){let w=document.body.innerText.split(' '); let i=Math.floor(Math.random()*w.length); w[i]='____'; alert(w.slice(0,50).join(' '));}
+function mcq(){alert("Q: Sample?\nA) 1\nB) 2\nC) 3\nD) 4");}
+function searchWiki(){ const q=document.getElementById('query').value; fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`).then(r=>r.json()).then(d=>{document.getElementById('wikiResult').innerHTML=`<h3>${d.title}</h3><p>${d.extract}</p>`; Monster.speak(d.extract);}).catch(()=>alert('Not found')); }
+function askAI(){ alert('AI offline');}
+function listen(){ alert('Voice command');}
+function saveProgress(){ localStorage.setItem('monster_notes',document.body.innerHTML); alert('Saved');}
+function loadProgress(){ const d=localStorage.getItem('monster_notes'); if(d) document.body.innerHTML=d;}
+window.onload=loadProgress;
+
+/* ---------------- Video Recommendations ---------------- */
+function playVideo(){ const topic=document.getElementById("videoTopic").value; Monster.getVideoForTopic(topic).then(video=>{document.getElementById("videoOutput").innerText="Video: "+video}); }
+function requestNewVideo(){ const topic=document.getElementById("videoTopic").value; Monster.requestNewVideo(topic).then(video=>{document.getElementById("videoOutput").innerText="New Video: "+video}); }
+
+/* ---------------- AI Tutor ---------------- */
+function register(){ const names=document.getElementById("participantNames").value; Monster.registerParticipants(names).then(()=> document.getElementById('tutorOutput').innerText="Participants registered") }
+function select(){ Monster.selectParticipant().then(p => document.getElementById('tutorOutput').innerText="Selected: "+p) }
+function updateBoard(){ const content=document.getElementById("boardContent").value; Monster.updateSmartBoard(content).then(()=> document.getElementById('tutorOutput').innerText="Smart Board updated") }
+function viewBoard(){ Monster.viewSmartBoard().then(c => document.getElementById('tutorOutput').innerText="Smart Board: "+c) }
+function fetchInfo(){ const query=document.getElementById("boardContent").value; Monster.fetchOnlineInfo(query).then(info => document.getElementById('tutorOutput').innerText=info) }
+
+/* ---------------- Participant Interaction ---------------- */
+function raiseHand(){ const name=document.getElementById('participantNameInteract').value; Monster.raiseHand(name).then(msg=>document.getElementById('interactionOutput').innerText=msg) }
+function listHands(){ Monster.listRaisedHands().then(msg=>document.getElementById('interactionOutput').innerText=msg) }
+function clearHands(){ Monster.clearHands().then(()=>document.getElementById('interactionOutput').innerText="Hands cleared") }
+function submitQuestion(){ const name=document.getElementById('participantNameInteract').value; const question=document.getElementById('silentQuestion').value; Monster.submitSilentQuestion(name,question); document.getElementById('interactionOutput').innerText="Silent question submitted" }
+function answerQuestions(){ Monster.answerSilentQuestions().then(ans=>document.getElementById('interactionOutput').innerText=ans) }
+
+/* ---------------- Study Planner ---------------- */
+function uploadOutline(){ const outline=document.getElementById('courseOutline').value; Monster.uploadOutline(outline).then(()=>document.getElementById('planOutput').innerText="Outline uploaded") }
+function setBreak(){ const mins=parseInt(document.getElementById('breakMinutes').value); Monster.setBreak(mins).then(()=>document.getElementById('planOutput').innerText="Break set for "+mins+" minutes") }
+function generatePlan(){ Monster.generateDailyPlan().then(plan=>document.getElementById('planOutput').innerText=plan) }
+function fetchQuestions(){ const topic=document.getElementById('questionTopic').value; Monster.fetchPastQuestions(topic).then(qs=>document.getElementById('planOutput').innerText=qs) }
+
+/* ---------------- Interphase Breaks ---------------- */
+function setBreakLength(){ const mins=parseInt(document.getElementById('breakLength').value); Monster.setSessionBreak(mins).then(()=>document.getElementById('breakOutput').innerText="Break set for "+mins+" minutes") }
+function startBreak(){ Monster.startBreak().then(()=>document.getElementById('breakOutput').innerText="Break started") }
+</script>
+
+</body>
+</html>
