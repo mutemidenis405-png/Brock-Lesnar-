@@ -1,0 +1,41 @@
+name: Build Monster v2.4 APK
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Java
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # Step 3: Set up Android SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # Step 4: Grant execute permission for gradlew
+      - name: Grant execute permission
+        run: chmod +x ./gradlew
+
+      # Step 5: Build Debug APK
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      # Step 6: Upload APK as artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Monster-v2.4-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
