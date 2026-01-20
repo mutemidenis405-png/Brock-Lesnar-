@@ -1,1 +1,41 @@
-Gradle 
+# ------------------------------
+# gradlew (Unix / Mac / Linux)
+# ------------------------------
+#!/usr/bin/env sh
+DIRNAME=$(dirname "$0")
+export GRADLE_HOME="$DIRNAME/gradle/wrapper"
+exec "$DIRNAME/gradlew" "$@"
+
+# ------------------------------
+# gradlew.bat (Windows)
+# ------------------------------
+@echo off
+SET DIRNAME=%~dp0
+SET GRADLE_HOME=%DIRNAME%gradle\wrapper
+"%DIRNAME%gradlew" %*
+
+# ------------------------------
+# build.gradle (Root Gradle)
+# ------------------------------
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.2.0"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+# ------------------------------
+# settings.gradle
+# ------------------------------
+rootProject.name = "MonsterStudy_v2_4"
+include ':app'
