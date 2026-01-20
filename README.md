@@ -142,10 +142,3 @@ Future updates may include payment integration, video curation, and enhanced onl
 
 
 
----
-
-This README is ready to paste directly into GitHub.
-
-If you want, I can also draft a short “Usage Guide” section with screenshots or example commands for easier navigation and first-time use.
-
-Do you want me to do that next?
