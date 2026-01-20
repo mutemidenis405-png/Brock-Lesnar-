@@ -1,1 +1,38 @@
-resources 
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ================= Strings ================= -->
+    <string name="app_name">Monster Study</string>
+
+    <!-- ================= Colors ================= -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- ================= Theme ================= -->
+    <style name="Theme.Monster" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
+
+    <!-- ================= Launcher Icon (Vector) ================= -->
+    <drawable name="ic_launcher">
+        <vector android:width="108dp"
+                android:height="108dp"
+                android:viewportWidth="108"
+                android:viewportHeight="108">
+            <path
+                android:fillColor="#6200EE"
+                android:pathData="M0,0h108v108h-108z"/>
+        </vector>
+    </drawable>
+
+</resources>
