@@ -1,0 +1,36 @@
+import os
+
+# Root folder of your project
+root = "MonsterStudy_v2_4"
+
+# Standard Android & Gradle folders
+folders = [
+    ".github/workflows",                  # GitHub Actions workflow
+    "app/src/main/java/com/monster/study",# Kotlin source code
+    "app/src/main/res",                   # Android resources (layouts, drawables, values)
+    "app/src/main/assets",                # HTML, JS, PDFs, or other static files
+    "app/src/main/AndroidManifest.xml",   # Manifest will be a file later
+    "gradle/wrapper"                      # Gradle wrapper files
+]
+
+# Create all folders
+for f in folders:
+    os.makedirs(os.path.join(root, f), exist_ok=True)
+
+# Empty files that are required to avoid Gradle errors
+required_files = [
+    "gradlew",
+    "gradlew.bat",
+    "build.gradle",
+    "settings.gradle",
+    "gradle/wrapper/gradle-wrapper.properties",
+    "gradle/wrapper/gradle-wrapper.jar"
+]
+
+for f in required_files:
+    full_path = os.path.join(root, f)
+    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+    with open(full_path, "w") as temp_file:
+        temp_file.write("")  # placeholder content
+
+print(f"Folder structure for '{root}' is ready. You can now add source code, assets, resources, and Gradle wrapper files.")
